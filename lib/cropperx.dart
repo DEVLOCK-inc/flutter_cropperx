@@ -46,6 +46,12 @@ class Cropper extends StatefulWidget {
   /// The called when scale end.
   final GestureScaleEndCallback? onScaleEnd;
 
+  /// The called when image loading start.
+  final VoidCallback? onImageLoadStart;
+
+  /// The called when image loading end.
+  final VoidCallback? onImageLoadEnd;
+
   const Cropper({
     Key? key,
     this.backgroundColor = const Color(0xFFCECECE),
@@ -58,6 +64,8 @@ class Cropper extends StatefulWidget {
     this.onScaleStart,
     this.onScaleUpdate,
     this.onScaleEnd,
+    this.onImageLoadStart,
+    this.onImageLoadEnd,
     required this.cropperKey,
     required this.image,
   }) : super(key: key);
@@ -153,9 +161,11 @@ class _CropperState extends State<Cropper> {
                             if (_hasImageUpdated && _shouldSetInitialScale) {
                               imageStream.removeListener(_imageStreamListener);
                               _setInitialScale(context, constraint.biggest);
+                              widget.onImageLoadEnd?.call();
                             }
 
                             if (_hasImageUpdated && !_shouldSetInitialScale) {
+                              widget.onImageLoadStart?.call();
                               imageStream.addListener(_imageStreamListener);
                             }
 
